@@ -3,15 +3,16 @@
 
 Game::Game(Renderer& r, Controller& c) :renderer{ r }, controller{ c }, running{ true }, fps{ "" }, player{ nullptr }, frame_count{ 0 }
 {
+	font = TTF_OpenFont("font\\font.ttf", 24);
+	bgfont = TTF_OpenFont("font\\bgfont.ttf", 44);
 	bulletTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\playerBullet.png");
 	enemyTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\enemy.png");
 	alienBulletTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\alienBullet.png");
 	playerTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\player.png");
-	background_stop = IMG_LoadTexture(renderer.getRenderer(), "gfx\\background.jpg");
-	background_play = IMG_LoadTexture(renderer.getRenderer(), "gfx\\background-play.jpg");
-	background_restart = IMG_LoadTexture(renderer.getRenderer(), "gfx\\background-restart.jpg");
-	gFont = TTF_OpenFont("font\\font.ttf", 24);
-	background = background_stop;
+	background = IMG_LoadTexture(renderer.getRenderer(), "gfx\\background.jpg");
+	background_play = drawFont("                     Asteriods\n\n        Press space to start", renderer.getScreenWidth() / 2, renderer.getScreenHeight() / 2, bgfont);
+	background_restart = drawFont("                GAME OVER!!!\n\n    Press space to restart", renderer.getScreenWidth() / 2, renderer.getScreenHeight() / 2, bgfont);
+	background_font = background_play.get();
 
 	enemySpawnTimer = 0;
 
@@ -24,10 +25,10 @@ Game::~Game()
 	SDL_DestroyTexture(enemyTexture);
 	SDL_DestroyTexture(alienBulletTexture);
 	SDL_DestroyTexture(playerTexture);
-	SDL_DestroyTexture(background_stop);
-	SDL_DestroyTexture(background_play);
-	SDL_DestroyTexture(background_restart);
-	TTF_CloseFont(gFont);
+	TTF_CloseFont(font);
+	TTF_CloseFont(bgfont);
+	player = nullptr;
+	background_font = nullptr;
 }
 
 std::string Game::calcFrameRate()
@@ -82,13 +83,13 @@ void Game::setGameState(GameState g) {
 	if (controller.keyboard[SDL_SCANCODE_SPACE] && gameState == GameState::stop)
 	{
 		gameState = GameState::start;
-		background = background_play;
+		background_font = nullptr;
 		initPlayer();
 	}
 	else if (g == GameState::stop)
 	{
 		gameState = g;
-		background = background_restart;
+		background_font = background_restart.get();
 		resetStage();
 	}
 }
@@ -309,11 +310,11 @@ void Game::spawnEnemies() {
 		SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
 
 		enemy->dx = -(2 + (rand() % 4));
-		enemy->reload = FPS * (1 + (rand() % 3));
+		enemy->reload = FPS; /* * (1 + (rand() % 3));*/
 
 		fighters.push_back(std::move(enemy));
 
-		enemySpawnTimer = 30 + (rand() % 60);
+		enemySpawnTimer = 10 + (rand() % 30);
 	}
 }
 
@@ -348,7 +349,7 @@ void Game::draw()
 
 	drawFighters();
 
-	updateFPS(fps);
+	updateFPS();
 }
 
 void Game::drawBackground() {
@@ -364,6 +365,8 @@ void Game::drawBackground() {
 
 		SDL_RenderCopy(renderer.getRenderer(), background, NULL, &dest);
 	}
+
+	renderer.Render(background_font);
 }
 
 void Game::drawPlayer()
@@ -391,20 +394,29 @@ void Game::drawFighters()
 	}
 }
 
-void Game::updateFPS(std::string textureText)
+void Game::updateFPS()
+{
+	unique_ptr<Entity> f = drawFont(fps, renderer.getScreenWidth() - 80, 10, font);
+	renderer.Render(f.get());
+
+	SDL_DestroyTexture(f->texture);
+}
+
+unique_ptr<Entity> Game::drawFont(std::string textureText, int x, int y, TTF_Font* font)
 {
 	SDL_Color textColor = { 255, 255, 255 };
-	SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, textureText.c_str(), textColor);
+	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, textureText.c_str(), textColor, 600);
 
 	SDL_Texture* fontTexture = SDL_CreateTextureFromSurface(renderer.getRenderer(), textSurface);
+	SDL_Rect dest;
+	SDL_QueryTexture(fontTexture, NULL, NULL, &dest.w, &dest.h);
 
-	Entity fps;
-	fps.x = renderer.getScreenWidth() - 80;
-	fps.y = 10;
-	fps.texture = fontTexture;
-
-	renderer.Render(&fps);
+	unique_ptr<Entity> e = make_unique<Entity>();
+	e->x = x - ((dest.w) / 2);
+	e->y = y - ((dest.h) / 2);
+	e->texture = fontTexture;
 
 	SDL_FreeSurface(textSurface);
-	SDL_DestroyTexture(fontTexture);
+
+	return std::move(e);
 }

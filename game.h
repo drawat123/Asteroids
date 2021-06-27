@@ -51,7 +51,8 @@ private:
 	void drawPlayer();
 	void drawBullets();
 	void drawFighters();
-	void updateFPS(std::string textureText);
+	void updateFPS();
+	unique_ptr<Entity> drawFont(std::string textureText, int x, int y, TTF_Font* font);
 	Entity* player;
 	std::string fps;
 	list<unique_ptr<Entity>> bullets;
@@ -61,9 +62,9 @@ private:
 	SDL_Texture* playerTexture;
 	SDL_Texture* alienBulletTexture;
 	SDL_Texture* background;
-	SDL_Texture* background_play;
-	SDL_Texture* background_stop;
-	SDL_Texture* background_restart;
+	Entity* background_font;
+	unique_ptr<Entity> background_play;
+	unique_ptr<Entity> background_restart;
 	Renderer& renderer;
 	Controller& controller;
 	bool running;
@@ -79,5 +80,6 @@ private:
 	int frame_count;
 
 	std::mutex m;
-	TTF_Font* gFont = NULL;
+	TTF_Font* font = nullptr;
+	TTF_Font* bgfont = nullptr;
 };

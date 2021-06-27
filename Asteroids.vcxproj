@@ -158,8 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="gfx\alienBullet.png" />
-    <Image Include="gfx\background-play.jpg" />
-    <Image Include="gfx\background-restart.jpg" />
     <Image Include="gfx\background.jpg" />
     <Image Include="gfx\enemy.png" />
     <Image Include="gfx\font.png" />
@@ -167,6 +165,7 @@
     <Image Include="gfx\playerBullet.png" />
   </ItemGroup>
   <ItemGroup>
+    <Font Include="font\bgfont.ttf" />
     <Font Include="font\font.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

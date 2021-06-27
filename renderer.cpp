@@ -68,6 +68,9 @@ int Renderer::getScreenHeight() const
 
 void Renderer::Render(Entity* e)
 {
+	if (e == nullptr) {
+		return;
+	}
 	blit(e->texture, e->x, e->y);
 }
 
