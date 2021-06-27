@@ -76,11 +76,11 @@ private:
 
 	Uint32 title_timestamp = SDL_GetTicks();
 	Uint32 frame_end;
-<<<<<<< HEAD
+
 	int frame_count;
-=======
+
 	int frame_count = 0;
->>>>>>> 1a50fdfa25555ec2a3855a2c9e7d9e76a86c6737
+
 
 	std::mutex m;
 	TTF_Font* gFont = NULL;
