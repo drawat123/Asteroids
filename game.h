@@ -2,84 +2,70 @@
 #include "SDL.h"
 #include "controller.h"
 #include "entity.h"
+#include "gamedraw.h"
+#include "gamelogic.h"
 #include "renderer.h"
-#include"defs.h"
-#include <list>
-#include <vector>
+#include <SDL_ttf.h>
 #include <algorithm>
+#include <future>
+#include <list>
 #include <memory>
 #include <thread>
-#include <future>
-#include <SDL_ttf.h>
 
-using std::list;
-using std::vector;
-using std::max_element;
-using std::unique_ptr;
-using std::make_unique;
-using std::thread;
 using std::future;
+using std::list;
+using std::make_unique;
+using std::max_element;
+using std::mutex;
 using std::promise;
+using std::string;
+using std::thread;
+using std::unique_ptr;
 
 class Game {
-public:
-	enum class GameState {
-		start, stop
-	};
-	Game(Renderer& r, Controller& c);
-	~Game();
-	void Run();
-	GameState gameState = GameState::stop;
-
 private:
-	void initPlayer();
-	void resetStage();
-	std::string calcFrameRate();
-	void logic();
-	void doPlayer();
-	void doFighters();
-	void setGameState(GameState g = GameState::start);
-	int playerHitFighter(Entity* b);
-	void doBullets();
-	int bulletHitFighter(Entity* b);
-	void doEnemies();
-	void fireAlienBullet(Entity* e);
-	void spawnEnemies();
-	void fireBullet();
-	void draw();
-	void drawBackground();
-	void drawPlayer();
-	void drawBullets();
-	void drawFighters();
-	void updateFPS();
-	unique_ptr<Entity> drawFont(std::string textureText, int x, int y, TTF_Font* font);
-	Entity* player;
-	std::string fps;
-	list<unique_ptr<Entity>> bullets;
-	list<unique_ptr<Entity>> fighters;
-	SDL_Texture* bulletTexture;
-	SDL_Texture* enemyTexture;
-	SDL_Texture* playerTexture;
-	SDL_Texture* alienBulletTexture;
-	SDL_Texture* background;
-	Entity* background_font;
-	unique_ptr<Entity> background_play;
-	unique_ptr<Entity> background_restart;
-	Renderer& renderer;
-	Controller& controller;
-	bool running;
-	int enemySpawnTimer = 0;
-	int stageResetTimer = 0;
-	int score = 0;
-	int highScore = 0;
-	int pHeight = 0;
-	int backgroundX = 0;
+  Game();
+  string calcFrameRate();
+  static Game *obj_;
+  unique_ptr<GameLogic> gameLogic;
+  unique_ptr<GameDraw> gameDraw;
+  const size_t SCREEN_WIDTH;
+  const size_t SCREEN_HEIGHT;
 
-	Uint32 title_timestamp = SDL_GetTicks();
-	Uint32 frame_end;
-	int frame_count;
+public:
+  static Game *GetInstance() {
+    if (obj_ == nullptr) {
+      obj_ = new Game();
+    }
+    return obj_;
+  }
+  ~Game();
+  void Run();
+  void initPlayer();
+  void resetStage();
+  unique_ptr<Entity> drawFont(string textureText, int x, int y, TTF_Font *font);
 
-	std::mutex m;
-	TTF_Font* font = nullptr;
-	TTF_Font* bgfont = nullptr;
+  Renderer renderer;
+  Controller controller;
+  Entity *player;
+  string fps;
+  list<unique_ptr<Entity>> bullets;
+  list<unique_ptr<Entity>> fighters;
+  SDL_Texture *playerTexture;
+  Entity *background_text;
+  unique_ptr<Entity> background_play_text;
+  unique_ptr<Entity> background_restart_text;
+  SDL_Event event;
+  Uint32 title_timestamp;
+  Uint32 frame_end;
+  mutex m;
+  TTF_Font *font;
+  TTF_Font *bgfont;
+
+  bool running;
+  int enemySpawnTimer;
+  int stageResetTimer;
+  int score;
+  int highScore;
+  int frame_count;
 };

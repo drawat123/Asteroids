@@ -147,11 +147,15 @@
     <ClInclude Include="defs.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="gamedraw.h" />
+    <ClInclude Include="gamelogic.h" />
     <ClInclude Include="renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="gamedraw.cpp" />
+    <ClCompile Include="gamelogic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="renderer.cpp" />
