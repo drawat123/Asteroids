@@ -76,11 +76,7 @@ private:
 
 	Uint32 title_timestamp = SDL_GetTicks();
 	Uint32 frame_end;
-
 	int frame_count;
-
-	int frame_count = 0;
-
 
 	std::mutex m;
 	TTF_Font* gFont = NULL;
