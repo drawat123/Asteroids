@@ -1,7 +1,11 @@
 #include "game.h"
 #include <iostream>
 
+<<<<<<< HEAD
 Game::Game(Renderer& r, Controller& c) :renderer{ r }, controller{ c }, running{ true }, fps{ "" }, player{ nullptr }, frame_count{ 0 }
+=======
+Game::Game(Renderer& r, Controller& c) :renderer{ r }, controller{ c }, running{ true }, fps{ "" }, player{ nullptr }
+>>>>>>> 1a50fdfa25555ec2a3855a2c9e7d9e76a86c6737
 {
 	bulletTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\playerBullet.png");
 	enemyTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\enemy.png");
