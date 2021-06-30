@@ -9,12 +9,12 @@ Game::Game()
                                                                          0} {
   font = TTF_OpenFont("font\\font.ttf", 24);
   bgfont = TTF_OpenFont("font\\bgfont.ttf", 44);
-  background_play_text = drawFont(
-      "                     Asteriods\n\n        Press space to start",
-      renderer.getScreenWidth() / 2, renderer.getScreenHeight() / 2, bgfont);
-  background_restart_text = drawFont(
-      "                GAME OVER!!!\n\n    Press space to restart",
-      renderer.getScreenWidth() / 2, renderer.getScreenHeight() / 2, bgfont);
+  background_play_text =
+      drawFont("                     Asteriods\n\n        Press space to start",
+               SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, bgfont);
+  background_restart_text =
+      drawFont("                GAME OVER!!!\n\n    Press space to restart",
+               SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, bgfont);
   background_text = background_play_text.get();
   playerTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\player.png");
 

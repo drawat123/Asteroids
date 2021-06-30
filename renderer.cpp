@@ -51,10 +51,6 @@ void Renderer::prepareScene() {
 
 void Renderer::presentScene() { SDL_RenderPresent(sdl_renderer); }
 
-int Renderer::getScreenWidth() const { return screen_width; }
-
-int Renderer::getScreenHeight() const { return screen_height; }
-
 void Renderer::Render(Entity *e) {
   if (e == nullptr) {
     return;

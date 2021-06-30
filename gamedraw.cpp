@@ -26,12 +26,12 @@ void GameDraw::drawBackground() {
   SDL_Rect dest;
   int x;
 
-  for (x = backgroundX; x < gameInstance1->renderer.getScreenWidth();
-       x += gameInstance1->renderer.getScreenWidth()) {
+  for (x = backgroundX; x < gameInstance1->SCREEN_WIDTH;
+       x += gameInstance1->SCREEN_WIDTH) {
     dest.x = x;
     dest.y = 0;
-    dest.w = gameInstance1->renderer.getScreenWidth();
-    dest.h = gameInstance1->renderer.getScreenHeight();
+    dest.w = gameInstance1->SCREEN_WIDTH;
+    dest.h = gameInstance1->SCREEN_HEIGHT;
 
     SDL_RenderCopy(gameInstance1->renderer.getRenderer(), background, NULL,
                    &dest);
@@ -64,7 +64,7 @@ void GameDraw::drawFighters() {
 
 void GameDraw::updateFPS() {
   unique_ptr<Entity> f = gameInstance1->drawFont(
-      gameInstance1->fps, gameInstance1->renderer.getScreenWidth() - 80, 10,
+      gameInstance1->fps, gameInstance1->SCREEN_WIDTH - 80, 10,
       gameInstance1->font);
   gameInstance1->renderer.Render(f.get());
 

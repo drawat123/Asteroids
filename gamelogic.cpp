@@ -49,8 +49,7 @@ void GameLogic::doPlayer() {
 
     if (gameInstance->controller.keyboard[SDL_SCANCODE_DOWN] &&
         (gameInstance->player->y + 4) <
-            gameInstance->renderer.getScreenHeight() -
-                gameInstance->player->h) {
+            gameInstance->SCREEN_HEIGHT - gameInstance->player->h) {
       gameInstance->player->dy = PLAYER_SPEED;
     }
 
@@ -61,7 +60,7 @@ void GameLogic::doPlayer() {
 
     if (gameInstance->controller.keyboard[SDL_SCANCODE_RIGHT] &&
         (gameInstance->player->x + 4) <
-            gameInstance->renderer.getScreenWidth() - gameInstance->player->w) {
+            gameInstance->SCREEN_WIDTH - gameInstance->player->w) {
       gameInstance->player->dx = PLAYER_SPEED;
     }
 
@@ -137,8 +136,8 @@ void GameLogic::doBullets() {
     b->x += b->dx;
     b->y += b->dy;
     if (bulletHitFighter(b) || b->x < -b->w || b->y < -b->h ||
-        b->x > gameInstance->renderer.getScreenWidth() ||
-        b->y > gameInstance->renderer.getScreenHeight()) {
+        b->x > gameInstance->SCREEN_WIDTH ||
+        b->y > gameInstance->SCREEN_HEIGHT) {
       itr = gameInstance->bullets.erase(itr);
     } else if (itr != gameInstance->bullets.end()) {
       itr++;
@@ -174,8 +173,8 @@ void GameLogic::spawnEnemies() {
 
     enemy->texture = enemyTexture;
     SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
-    enemy->x = gameInstance->renderer.getScreenWidth();
-    enemy->y = rand() % (gameInstance->renderer.getScreenHeight() - enemy->h);
+    enemy->x = gameInstance->SCREEN_WIDTH;
+    enemy->y = rand() % (gameInstance->SCREEN_HEIGHT - enemy->h);
     enemy->side = Entity::Type::SIDE_ALIEN;
     enemy->health = 1;
     enemy->dx = -(2 + (rand() % 4));

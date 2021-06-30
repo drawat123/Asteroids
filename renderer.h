@@ -17,8 +17,6 @@ public:
   SDL_Renderer *getRenderer() const;
   void prepareScene();
   void presentScene();
-  int getScreenWidth() const;
-  int getScreenHeight() const;
   void UpdateWindowTitle(int score, int maxScore);
 
   ~Renderer();

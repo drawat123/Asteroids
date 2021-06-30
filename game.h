@@ -29,8 +29,6 @@ private:
   static Game *obj_;
   unique_ptr<GameLogic> gameLogic;
   unique_ptr<GameDraw> gameDraw;
-  const size_t SCREEN_WIDTH;
-  const size_t SCREEN_HEIGHT;
 
 public:
   static Game *GetInstance() {
@@ -45,6 +43,8 @@ public:
   void resetStage();
   unique_ptr<Entity> drawFont(string textureText, int x, int y, TTF_Font *font);
 
+  const size_t SCREEN_WIDTH;
+  const size_t SCREEN_HEIGHT;
   Renderer renderer;
   Controller controller;
   Entity *player;
