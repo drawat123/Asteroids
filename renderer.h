@@ -18,11 +18,12 @@ public:
   void prepareScene();
   void presentScene();
   void UpdateWindowTitle(int score, int maxScore);
+  void blit(SDL_Texture *texture, int x, int y);
+  void blit(SDL_Texture *texture, SDL_Rect *src, int x, int y);
 
   ~Renderer();
 
 private:
-  void blit(SDL_Texture *texture, int x, int y);
   SDL_Window *sdl_window;
   SDL_Renderer *sdl_renderer;
   const std::size_t screen_width;

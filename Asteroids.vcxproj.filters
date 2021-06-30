@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\font">
       <UniqueIdentifier>{e7af3a0f-9dd4-4b3e-9b3a-8a031d729de1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\sound">
+      <UniqueIdentifier>{b3ba7ff1-fa82-49b6-b0f8-f9ec88c58fe3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -40,6 +43,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gamedraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="debris.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="explosion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamesound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,6 +77,15 @@
     <ClCompile Include="gamedraw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="debris.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="explosion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gamesound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="gfx\alienBullet.png">
@@ -85,6 +106,9 @@
     <Image Include="gfx\background.jpg">
       <Filter>Resource Files\gfx</Filter>
     </Image>
+    <Image Include="gfx\explosion.png">
+      <Filter>Resource Files\gfx</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="font\bgfont.ttf">
@@ -93,5 +117,25 @@
     <Font Include="font\font.ttf">
       <Filter>Resource Files\font</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sound\10 Guage Shotgun-SoundBible.com-74120584.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="sound\196914__dpoggioli__laser-gun.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="sound\245372__quaker540__hq-explosion.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="sound\334227__jradcoolness__laser.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="sound\342749__rhodesmas__notification-01.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
+    <None Include="sound\Mercury.ogg">
+      <Filter>Resource Files\sound</Filter>
+    </None>
   </ItemGroup>
 </Project>

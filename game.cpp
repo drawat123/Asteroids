@@ -95,9 +95,13 @@ void Game::resetStage() {
 
   bullets.clear();
 
+  explosion.clear();
+
+  debris.clear();
+
   enemySpawnTimer = 0;
 
-  stageResetTimer = FPS * 2;
+  stageResetTimer = FPS * 3;
 
   highScore = max(score, highScore);
   score = 0;

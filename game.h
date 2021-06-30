@@ -1,7 +1,9 @@
 #pragma once
 #include "SDL.h"
 #include "controller.h"
+#include "debris.h"
 #include "entity.h"
+#include "explosion.h"
 #include "gamedraw.h"
 #include "gamelogic.h"
 #include "renderer.h"
@@ -61,6 +63,8 @@ public:
   mutex m;
   TTF_Font *font;
   TTF_Font *bgfont;
+  list<unique_ptr<Explosion>> explosion;
+  list<unique_ptr<Debris>> debris;
 
   bool running;
   int enemySpawnTimer;

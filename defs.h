@@ -8,8 +8,16 @@ constexpr auto PLAYER_BULLET_SPEED = 16;
 constexpr auto MAX_KEYBOARD_KEYS = 350;
 constexpr auto FPS = 60;
 constexpr auto ALIEN_BULLET_SPEED = 8;
-
+constexpr auto MAX_SND_CHANNELS = 8;
 enum class GameState { start, stop };
+enum { CH_ANY = -1, CH_PLAYER, CH_ALIEN_FIRE };
+enum {
+  SND_PLAYER_FIRE,
+  SND_ALIEN_FIRE,
+  SND_PLAYER_DIE,
+  SND_ALIEN_DIE,
+  SND_MAX
+};
 
 static int collision(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
                      int h2) {

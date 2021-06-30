@@ -29,8 +29,13 @@ void GameLogic::logic() {
 
   doEnemies();
 
+  doExplosions();
+
+  doDebris();
+
   if (gameInstance->player == nullptr && --gameInstance->stageResetTimer <= 0) {
     setGameState(GameState::stop);
+    gameInstance->resetStage();
   }
 }
 
@@ -66,6 +71,8 @@ void GameLogic::doPlayer() {
 
     if (gameInstance->controller.keyboard[SDL_SCANCODE_LCTRL] &&
         gameInstance->player->reload == 0) {
+      gameSound.playSound(SND_PLAYER_FIRE, CH_PLAYER);
+
       fireBullet();
     }
 
@@ -122,6 +129,9 @@ int GameLogic::playerHitFighter(Entity *e) {
                 gameInstance->player->y, gameInstance->player->w,
                 gameInstance->player->h)) {
     e->health = 0;
+    addDebris(e);
+    addExplosions(e->x, e->w, 10);
+    gameSound.playSound(SND_ALIEN_DIE, CH_ANY);
     return 1;
   }
 
@@ -130,6 +140,7 @@ int GameLogic::playerHitFighter(Entity *e) {
 
 void GameLogic::doBullets() {
   Entity *b{nullptr};
+
   for (list<unique_ptr<Entity>>::iterator itr = gameInstance->bullets.begin();
        itr != gameInstance->bullets.end();) {
     b = (*itr).get();
@@ -154,11 +165,16 @@ int GameLogic::bulletHitFighter(Entity *b) {
         collision(b->x, b->y, b->w, b->h, e->x, e->y, e->w, e->h)) {
       b->health = 0;
       e->health = 0;
-      if (e != gameInstance->player) {
+      if (e == gameInstance->player) {
+        gameSound.playSound(SND_PLAYER_DIE, CH_PLAYER);
+      } else if (e != gameInstance->player) {
         gameInstance->score++;
         gameInstance->renderer.UpdateWindowTitle(gameInstance->score,
                                                  gameInstance->highScore);
+        gameSound.playSound(SND_ALIEN_DIE, CH_ANY);
       }
+      addDebris(e);
+      addExplosions(e->x, e->w, 10);
       return 1;
     }
   }
@@ -195,6 +211,8 @@ void GameLogic::doEnemies() {
     if (e != gameInstance->player && gameInstance->player != nullptr &&
         --e->reload <= 0) {
       fireAlienBullet(e);
+
+      gameSound.playSound(SND_ALIEN_FIRE, CH_ALIEN_FIRE);
     }
   }
 }
@@ -228,12 +246,118 @@ void GameLogic::fireAlienBullet(Entity *e) {
   e->reload = (rand() % FPS * 2);
 }
 
+void GameLogic::addExplosions(int x, int y, int num) {
+  unique_ptr<Explosion> e;
+  int i;
+
+  for (i = 0; i < num; i++) {
+    e = make_unique<Explosion>();
+
+    e->x = x + (rand() % 32) - (rand() % 32);
+    e->y = y + (rand() % 32) - (rand() % 32);
+    e->dx = (rand() % 10) - (rand() % 10);
+    e->dy = (rand() % 10) - (rand() % 10);
+
+    e->dx /= 10;
+    e->dy /= 10;
+
+    switch (rand() % 4) {
+    case 0:
+      e->r = 255;
+      break;
+
+    case 1:
+      e->r = 255;
+      e->g = 128;
+      break;
+
+    case 2:
+      e->r = 255;
+      e->g = 255;
+      break;
+
+    default:
+      e->r = 255;
+      e->g = 255;
+      e->b = 255;
+      break;
+    }
+
+    e->a = rand() % FPS * 3;
+
+    gameInstance->explosion.push_back(std::move(e));
+  }
+}
+
+void GameLogic::doExplosions() {
+  Explosion *e;
+
+  for (list<unique_ptr<Explosion>>::iterator itr =
+           gameInstance->explosion.begin();
+       itr != gameInstance->explosion.end();) {
+    e = (*itr).get();
+    e->x += e->dx;
+    e->y += e->dy;
+    if (--e->a <= 0) {
+      itr = gameInstance->explosion.erase(itr);
+    } else if (itr != gameInstance->explosion.end()) {
+      itr++;
+    }
+  }
+}
+
+void GameLogic::addDebris(Entity *e) {
+  unique_ptr<Debris> d;
+  int x, y, w, h;
+
+  w = e->w / 2;
+  h = e->h / 2;
+
+  for (y = 0; y <= h; y += h) {
+    for (x = 0; x <= w; x += w) {
+      d = make_unique<Debris>();
+
+      d->x = e->x + e->w / 2;
+      d->y = e->y + e->h / 2;
+      d->dx = (rand() % 5) - (rand() % 5);
+      d->dy = -(5 + (rand() % 12));
+      d->life = FPS * 2;
+      d->texture = e->texture;
+
+      d->rect.x = x;
+      d->rect.y = y;
+      d->rect.w = w;
+      d->rect.h = h;
+
+      gameInstance->debris.push_back(std::move(d));
+    }
+  }
+}
+
+void GameLogic::doDebris() {
+  Debris *d;
+
+  for (list<unique_ptr<Debris>>::iterator itr = gameInstance->debris.begin();
+       itr != gameInstance->debris.end();) {
+    d = (*itr).get();
+    d->x += d->dx;
+    d->y += d->dy;
+    d->dy += 0.5;
+    if (--d->life <= 0) {
+      itr = gameInstance->debris.erase(itr);
+    } else if (itr != gameInstance->debris.end()) {
+      itr++;
+    }
+  }
+}
+
 void GameLogic::setGameState(GameState g) {
   if (gameInstance->controller.keyboard[SDL_SCANCODE_SPACE] &&
       gameState == GameState::stop) {
     gameState = GameState::start;
     gameInstance->background_text = nullptr;
     gameInstance->initPlayer();
+    gameSound.playSound(SND_PLAYER_FIRE, CH_PLAYER);
   } else if (g == GameState::stop) {
     gameState = g;
     gameInstance->background_text = gameInstance->background_restart_text.get();

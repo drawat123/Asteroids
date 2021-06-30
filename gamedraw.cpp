@@ -6,6 +6,8 @@ Game *gameInstance1 = Game::GetInstance();
 GameDraw::GameDraw() : backgroundX{0} {
   background = IMG_LoadTexture(gameInstance1->renderer.getRenderer(),
                                "gfx\\background.jpg");
+  explosionTexture = IMG_LoadTexture(gameInstance1->renderer.getRenderer(),
+                                     "gfx\\explosion.png");
 }
 
 GameDraw::~GameDraw() { SDL_DestroyTexture(background); }
@@ -18,6 +20,10 @@ void GameDraw::draw() {
   drawBullets();
 
   drawFighters();
+
+  drawDebris();
+
+  drawExplosions();
 
   updateFPS();
 }
@@ -60,6 +66,36 @@ void GameDraw::drawFighters() {
       gameInstance1->renderer.Render((*itr).get());
     }
   }
+}
+
+void GameDraw::drawDebris() {
+  Debris *d;
+  for (list<unique_ptr<Debris>>::iterator itr = gameInstance1->debris.begin();
+       itr != gameInstance1->debris.end(); itr++) {
+    d = (*itr).get();
+    gameInstance1->renderer.blit(d->texture, &d->rect, d->x, d->y);
+  }
+}
+
+void GameDraw::drawExplosions() {
+  Explosion *e;
+
+  SDL_SetRenderDrawBlendMode(gameInstance1->renderer.getRenderer(),
+                             SDL_BLENDMODE_ADD);
+  SDL_SetTextureBlendMode(explosionTexture, SDL_BLENDMODE_ADD);
+
+  for (list<unique_ptr<Explosion>>::iterator itr =
+           gameInstance1->explosion.begin();
+       itr != gameInstance1->explosion.end(); itr++) {
+    e = (*itr).get();
+    SDL_SetTextureColorMod(explosionTexture, e->r, e->g, e->b);
+    SDL_SetTextureAlphaMod(explosionTexture, e->a);
+
+    gameInstance1->renderer.blit(explosionTexture, e->x, e->y);
+  }
+
+  SDL_SetRenderDrawBlendMode(gameInstance1->renderer.getRenderer(),
+                             SDL_BLENDMODE_NONE);
 }
 
 void GameDraw::updateFPS() {

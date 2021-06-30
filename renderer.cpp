@@ -71,6 +71,17 @@ void Renderer::blit(SDL_Texture *texture, int x, int y) {
   SDL_RenderCopy(sdl_renderer, texture, NULL, &dest);
 }
 
+void Renderer::blit(SDL_Texture *texture, SDL_Rect *src, int x, int y) {
+  SDL_Rect dest;
+
+  dest.x = x;
+  dest.y = y;
+  dest.w = src->w;
+  dest.h = src->h;
+
+  SDL_RenderCopy(sdl_renderer, texture, src, &dest);
+}
+
 void Renderer::UpdateWindowTitle(int score, int maxScore) {
   std::string title{"Asteroids          Score: " + std::to_string(score) +
                     "          High Score: " + std::to_string(maxScore)};
