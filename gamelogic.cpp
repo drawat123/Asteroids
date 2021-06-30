@@ -130,7 +130,7 @@ int GameLogic::playerHitFighter(Entity *e) {
                 gameInstance->player->h)) {
     e->health = 0;
     addDebris(e);
-    addExplosions(e->x, e->w, 10);
+    addExplosions(e->x, e->y, 10);
     gameSound.playSound(SND_ALIEN_DIE, CH_ANY);
     return 1;
   }
@@ -174,7 +174,7 @@ int GameLogic::bulletHitFighter(Entity *b) {
         gameSound.playSound(SND_ALIEN_DIE, CH_ANY);
       }
       addDebris(e);
-      addExplosions(e->x, e->w, 10);
+      addExplosions(e->x, e->y, 10);
       return 1;
     }
   }

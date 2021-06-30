@@ -1,7 +1,7 @@
 #include "game.h"
 #include <iostream>
 Game::Game()
-    : SCREEN_WIDTH{640}, SCREEN_HEIGHT{480},
+    : SCREEN_WIDTH{1280}, SCREEN_HEIGHT{720},
       renderer(SCREEN_WIDTH, SCREEN_HEIGHT),
       controller(event), running{true}, fps{""}, player{nullptr},
       frame_count{0}, enemySpawnTimer{0}, font{nullptr}, bgfont{nullptr},
@@ -17,6 +17,8 @@ Game::Game()
                SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, bgfont);
   background_text = background_play_text.get();
   playerTexture = IMG_LoadTexture(renderer.getRenderer(), "gfx\\player.png");
+
+  SDL_ShowCursor(0);
 
   resetStage();
 }
